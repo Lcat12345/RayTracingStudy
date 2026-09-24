@@ -1,4 +1,4 @@
-#ifndef COLOR_H
+ï»¿#ifndef COLOR_H
 #define COLOR_H
 
 #include "Vec3.h"
@@ -13,12 +13,12 @@ void WriteColor(std::ostream& out, const Color& pixelColor)
 	auto g = pixelColor.Y();
 	auto b = pixelColor.Z();
 
-	// [0,1] ¹üÀ§ÀÇ ÄÄÆ÷³ÍÆ® °ªÀ» ¹ÙÀÌÆ® ¹üÀ§ [0,255]·Î º¯È¯ÇÕ´Ï´Ù.
+	// [0,1] ë²”ìœ„ì˜ ì»´í¬ë„ŒíŠ¸ ê°’ì„ ë°”ì´íŠ¸ ë²”ìœ„ [0,255]ë¡œ ë³€í™˜í•©ë‹ˆë‹¤.
 	int rByte = int(255.999 * r);
 	int gByte = int(255.999 * g);
 	int bByte = int(255.999 * b);
 
-	// ÇÈ¼¿ »ö»ó ÄÄÆ÷³ÍÆ®¸¦ Ãâ·ÂÇÕ´Ï´Ù.
+	// í”½ì…€ ìƒ‰ìƒ ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶œë ¥í•©ë‹ˆë‹¤.
 	out << rByte << ' ' << gByte << ' ' << bByte << '\n';
 }
 

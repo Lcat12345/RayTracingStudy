@@ -1,4 +1,4 @@
-#ifndef VEC3_H
+ï»¿#ifndef VEC3_H
 #define VEC3_H
 
 #include <cmath>
@@ -52,10 +52,10 @@ struct Vector3
 };
 typedef Vector3 Vec3;
 
-// Point3Àº Vec3ÀÇ º°ÄªÀÔ´Ï´Ù. ÄÚµåÀÇ ±âÇÏÇĞÀû ¸íÈ®¼ºÀ» À§ÇØ À¯¿ëÇÕ´Ï´Ù.
+// Point3ì€ Vec3ì˜ ë³„ì¹­ì…ë‹ˆë‹¤. ì½”ë“œì˜ ê¸°í•˜í•™ì  ëª…í™•ì„±ì„ ìœ„í•´ ìœ ìš©í•©ë‹ˆë‹¤.
 using Point3 = Vector3;
 
-// º¤ÅÍ À¯Æ¿¸®Æ¼ ÇÔ¼öµé
+// ë²¡í„° ìœ í‹¸ë¦¬í‹° í•¨ìˆ˜ë“¤
 inline std::ostream& operator<<(std::ostream& out, const Vector3& v)
 {
 	return out << v.E[0] << ' ' << v.E[1] << ' ' << v.E[2];
