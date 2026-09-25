@@ -1,4 +1,4 @@
-﻿#ifndef VEC3_H
+#ifndef VEC3_H
 #define VEC3_H
 
 #include <cmath>
@@ -78,7 +78,7 @@ inline Vector3 operator*(const Vector3& u, const Vector3& v)
 
 inline Vector3 operator*(double t, const Vector3& v)
 {
-	return Vector3(t * v.E[0], t * v.E[0], t * v.E[0]);
+	return Vector3(t * v.E[0], t * v.E[1], t * v.E[2]);
 }
 
 inline Vector3 operator*(const Vector3& v, double t)
