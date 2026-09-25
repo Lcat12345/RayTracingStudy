@@ -4,8 +4,21 @@
 
 #include <iostream>
 
+bool HitSphere(const Point3& center, double radius, const Ray& r)
+{
+	Vec3 oc = center - r.Origin();
+	auto a = Dot(r.Direction(), r.Direction());
+	auto b = -2.0 * Dot(r.Direction(), oc);
+	auto c = Dot(oc, oc) - radius * radius;
+	auto discriminant = b * b - 4 * a * c;
+	return (discriminant >= 0);
+}
+
 Color RayColor(const Ray& r)
 {
+	if (HitSphere(Point3(0, 0, -1), 0.5, r))
+		return Color(1, 0, 0);
+
 	Vec3 unitDirection = UnitVector(r.Direction());
 	auto a = 0.5 * (unitDirection.Y() + 1.0);
 
