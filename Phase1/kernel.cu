@@ -23,20 +23,6 @@ __global__ void addKernel(int *c, const int *a, const int *b)
     c[i] = a[i] + b[i];
 }
 
-Color RayColor(const Ray& ray, const Hittable& world)
-{
-	HitRecord hitRecord;
-	if (world.Hit(ray, Interval(0.0, Infinity), hitRecord))
-	{
-		return 0.5 * (hitRecord.Normal + Color(1.0, 1.0, 1.0));
-	}
-
-	Vector3 unitDirection = UnitVector(ray.Direction());
-	auto a = 0.5 * (unitDirection.Y() + 1.0);
-
-	return  (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
-}
-
 int main()
 {
 	HittableList world;
@@ -48,6 +34,7 @@ int main()
 
 	camera.aspectRatio = 16.0 / 9.0;
 	camera.imageWidth = 400;
+	camera.samplesPerPixel = 100;
 
 	// Render
 
