@@ -13,7 +13,7 @@ public:
 		 
 		bFrontFace = Dot(r.Direction(), outwardNormal) < 0;
 		Normal = bFrontFace ? outwardNormal : -outwardNormal;
-	}
+	}	
 
 	// 법선은 항상 밖을 향한다.
 	// 1. 법선이 항상 밖을 향한다. ( 지금까지 구한 법선들 구의 중심에서 교참점 방향 P - C -> 여기서 크기로 나누면 외향법선)
