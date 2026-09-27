@@ -80,11 +80,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Hittable.h" />
+    <ClInclude Include="HittableList.h" />
+    <ClInclude Include="Interval.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="RtWeekend.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="Vec3.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <CudaCompile Include="kernel.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

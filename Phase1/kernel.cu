@@ -1,5 +1,15 @@
-﻿#include "cuda_runtime.h"
+#include "cuda_runtime.h"
 #include "device_launch_parameters.h"
+
+#include "RtWeekend.h"
+
+#include "Hittable.h"
+#include "HittableList.h"
+#include "Sphere.h"
+
+#include "Ray.h"
+#include "Color.h"
+#include "Vec3.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -12,35 +22,104 @@ __global__ void addKernel(int *c, const int *a, const int *b)
     c[i] = a[i] + b[i];
 }
 
+double HitSphere(const Point3& center, double radius, const Ray& ray)
+{
+	Vec3 originToCenter = center - ray.Origin();
+	auto a = ray.Direction().LengthSquared();
+	auto h = Dot(ray.Direction(), originToCenter);
+	auto c = originToCenter.LengthSquared() - radius * radius;
+	auto discriminant = h * h - a * c;
+
+	if (discriminant < 0.0)
+	{
+		return -1.0;
+	}
+
+	return ((h - std::sqrt(discriminant)) / a);
+}
+
+Color RayColor(const Ray& ray, const Hittable& world)
+{
+	HitRecord hitRecord;
+	if (world.Hit(ray, Interval(0.0, Infinity), hitRecord))
+	{
+		return 0.5 * (hitRecord.Normal + Color(1.0, 1.0, 1.0));
+	}
+
+	Vector3 unitDirection = UnitVector(ray.Direction());
+	auto a = 0.5 * (unitDirection.Y() + 1.0);
+
+	return  (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
+}
+
 int main()
 {
-    // Image;
-    int ImageWidth = 256;
-    int ImageHeight = 256;
+	// Image
+	auto aspectRatio = 16.0 / 9.0;
+	int imageWidth = 400;
 
-    // Render
-    std::cout << "P3\n" << ImageWidth << ' ' << ImageHeight << "\n255\n";
+	// Calculate the image height, and ensure that it's at least 1
+	int imageHeight = static_cast<int>(imageWidth / aspectRatio);
+	imageHeight = (imageHeight < 1) ? 1 : imageHeight;
 
-    for (int j = 0; j < ImageHeight; j++)
-    {
-        std::clog << "\rScanlines remaining: " << (ImageHeight - j) << ' ' << std::flush;
-        for (int i = 0; i < ImageWidth; i++)
-        {
-            // r,g,b 값은 관례적으로 0과 1사이의 실수값으로 표현합니다.
-            auto r = double(i) / (ImageWidth - 1);
-            auto g = double(j) / (ImageHeight - 1);
-            auto b = 0.0;
+	// World
 
-            // 출력을 할 때 0~255 사이의 정수값으로 스케일링 합니다.
-            int ir = int(255.999 * r);
-            int ig = int(255.999 * g);
-            int ib = int(255.999 * b);
+	HittableList world;
+	world.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5));
+	world.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0));
 
-            std::cout << ir << ' ' << ig << ' ' << ib << '\n';
-        }
-    }
+	// Camera
+	
+	auto focalLength = 1.0;
+	auto viewportHeight = 2.0;
+	auto viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
+	auto cameraCenter = Point3(0.0, 0.0, 0.0);
 
-    std::clog << "\rDone.           \n";
+	// Calculate the vectors across the horizontal and down the vertical viewport edges
+	auto viewportU = Vec3(viewportWidth, 0.0, 0.0);
+	auto viewportV = Vec3(0.0, -viewportHeight, 0.0);
+
+	// Calculate the horizontal and vertical delta vectors from pixel to pixel
+	auto pixelDeltaU = viewportU / imageWidth;
+	auto pixelDeltaV = viewportV / imageHeight;
+
+	// Calculate the location of the upper left pixel
+	auto viewportUpperLeft =
+		cameraCenter
+		- Vec3(0.0, 0.0, focalLength)
+		- viewportU / 2.0
+		- viewportV / 2.0;
+
+	auto pixel00Location = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
+
+	// Render
+
+	std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
+
+	for (int scanlineIndex = 0; scanlineIndex < imageHeight; scanlineIndex++)
+	{
+		std::clog
+			<< "\rScanlines remaining: "
+			<< (imageHeight - scanlineIndex)
+			<< ' '
+			<< std::flush;
+
+		for (int pixelIndex = 0; pixelIndex < imageWidth; pixelIndex++)
+		{
+			auto pixelCenter =
+				pixel00Location
+				+ (pixelIndex * pixelDeltaU)
+				+ (scanlineIndex * pixelDeltaV);
+
+			auto rayDirection = pixelCenter - cameraCenter;
+			Ray ray(cameraCenter, rayDirection);
+
+			Color pixelColor = RayColor(ray, world);
+			WriteColor(std::cout, pixelColor);
+		}
+	}
+
+	std::clog << "\rDone.			\n";
 
     return 0;
 }

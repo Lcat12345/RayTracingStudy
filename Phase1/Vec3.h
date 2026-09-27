@@ -99,7 +99,7 @@ inline double Dot(const Vector3& u, const Vector3& v)
 inline Vector3 Cross(const Vector3& u, const Vector3& v)
 {
 	return Vector3(
-		u.E[1] * v.E[2] - u.E[2] * v[1],
+		u.E[1] * v.E[2] - u.E[2] * v.E[1],
 		u.E[2] * v.E[0] - u.E[0] * v.E[2], 
 		u.E[0] * v.E[1] - u.E[1] * v.E[0]);
 }
