@@ -6,9 +6,10 @@
 class Camera
 {
 public:
-	double aspectRatio = 1.0;
-	int imageWidth = 100;
+	double aspectRatio = 1.0;			// Ratio of image width over height
+	int imageWidth = 100;				// Rendered image width in pixel count
 	int samplesPerPixel = 10;			// Count of random samples for each pixel
+	int maxDepth = 10;					// Maximum number of ray bounces into scene
 
 	void Render(const Hittable& world)
 	{
@@ -31,7 +32,7 @@ public:
 				for (int sampleIndex = 0; sampleIndex < samplesPerPixel; sampleIndex++)
 				{
 					Ray ray = GetRay(pixelIndex, scanlineIndex);
-					pixelColor += RayColor(ray, world);
+					pixelColor += RayColor(ray, maxDepth, world);
 				}
 
 				WriteColor(std::cout, mPixelSamplesScale * pixelColor);
@@ -99,13 +100,28 @@ private:
 		return Vec3(RandomDouble() - 0.5, RandomDouble() - 0.5, 0.0);
 	}
 
-	Color RayColor(const Ray& ray, const Hittable& world) const
+	Color RayColor(const Ray& ray, int depth, const Hittable& world) const
 	{
+		// If we've exceeded the ray bounce limit, no more light is gathered
+		if (depth <= 0)
+		{
+			return Color(0.0, 0.0, 0.0);
+		}
+
 		HitRecord hitRecord;
 
-		if (world.Hit(ray, Interval(0.0, Infinity), hitRecord))
+		// Default
+		// if (world.Hit(ray, Interval(0, Infinity), hitRecord))
+		// Hit 범위의 최소값을 줌 부동소수점 오차로 인해 똑같은 위치로 
+		// 반사되는 것을 방지함
+		if (world.Hit(ray, Interval(0.001, Infinity), hitRecord))
 		{
-			return 0.5 * (hitRecord.Normal + Color(1.0, 1.0, 1.0));
+			// 랜덤하게 광선을 보낸다.
+			//Vec3 direction = RandomOnHemisphere(hitRecord.Normal);
+			// 충돌 지점 P에서 무작위 점 S로 광선을 보낸다.
+			Vec3 direction = hitRecord.Normal + RandomUnitVector();
+
+			return 0.5 * RayColor(Ray(hitRecord.P, direction), depth - 1, world);
 		}
 
 		Vector3 unitDirection = UnitVector(ray.Direction());

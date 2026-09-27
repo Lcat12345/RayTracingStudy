@@ -6,11 +6,26 @@
 
 using Color = Vec3;
 
+inline double LinearToGamma(double linearComponent)
+{
+	if (linearComponent > 0.0) 
+	{
+		return std::sqrt(linearComponent);
+	}
+
+	return 0.0;
+}
+
 void WriteColor(std::ostream& out, const Color& pixelColor)
 {
 	auto r = pixelColor.X();
 	auto g = pixelColor.Y();
 	auto b = pixelColor.Z();
+
+	// Apply a linear to gamma transform for gamma = 2.0
+	r = LinearToGamma(r);
+	g = LinearToGamma(g);
+	b = LinearToGamma(b);
 
 	// [0,1] 범위의 컴포넌트 값을 바이트 범위 [0,255]로 변환합니다.
 	static const Interval intensity(0.000, 0.999);
