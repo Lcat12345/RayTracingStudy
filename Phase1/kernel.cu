@@ -28,6 +28,12 @@ int main()
 {
 	HittableList world;
 
+	//auto materialLeft = std::make_shared<Lambertian>(Color(0, 0, 1));
+	//auto materialRight = std::make_shared<Lambertian>(Color(1, 0, 0));
+
+	//world.Add(std::make_shared<Sphere>(Point3(-R, 0, -1), R, materialLeft));
+	//world.Add(std::make_shared<Sphere>(Point3(R, 0, -1), R, materialRight));
+	
 	auto materialGround = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
 	auto materialCenter = std::make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
 	auto materialLeft = std::make_shared<Dielectric>(1.50);
@@ -36,10 +42,8 @@ int main()
 
 	world.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, materialGround));
 	world.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, materialCenter));
-
 	world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, materialLeft));
 	world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.4, materialBubble));
-
 	world.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, materialRight));
 
 	// Camera
@@ -49,6 +53,11 @@ int main()
 	camera.imageWidth = 400;
 	camera.samplesPerPixel = 100;
 	camera.maxDepth = 50;
+
+	camera.vFov = 20;
+	camera.lookFrom = Point3(-2, 2, 1);
+	camera.lookAt = Point3(0, 0, -1);
+	camera.vUp = Vec3(0, 1, 0);
 
 	// Render
 
