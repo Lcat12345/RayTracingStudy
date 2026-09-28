@@ -1,10 +1,3 @@
-# RayTracingStudy
-
-<p align="center">
-  <img src="Images/Phase1_Final.png" alt="Phase 1 최종 렌더" width="800">
-</p>
-<p align="center"><sub>Phase 1 최종 렌더 · 1200 × 675 · 픽셀당 500 샘플 · 최대 반사 깊이 50</sub></p>
-
 [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)를 C++로 한 챕터씩 따라 구현하며 정리한 레이 트레이싱 스터디 저장소입니다.
 외부 라이브러리 없이 표준 라이브러리만 사용하고, 렌더 결과는 PPM 이미지로 출력합니다.
 
