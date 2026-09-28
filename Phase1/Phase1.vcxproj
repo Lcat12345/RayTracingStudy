@@ -76,6 +76,7 @@
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CodeGeneration>compute_120,sm_120</CodeGeneration>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -84,6 +85,7 @@
     <ClInclude Include="Hittable.h" />
     <ClInclude Include="HittableList.h" />
     <ClInclude Include="Interval.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RtWeekend.h" />
     <ClInclude Include="Sphere.h" />

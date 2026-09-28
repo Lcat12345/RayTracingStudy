@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "Hittable.h"
+#include "Material.h"
 
 class Camera
 {
@@ -110,18 +111,17 @@ private:
 
 		HitRecord hitRecord;
 
-		// Default
-		// if (world.Hit(ray, Interval(0, Infinity), hitRecord))
-		// Hit 범위의 최소값을 줌 부동소수점 오차로 인해 똑같은 위치로 
-		// 반사되는 것을 방지함
 		if (world.Hit(ray, Interval(0.001, Infinity), hitRecord))
 		{
-			// 랜덤하게 광선을 보낸다.
-			//Vec3 direction = RandomOnHemisphere(hitRecord.Normal);
-			// 충돌 지점 P에서 무작위 점 S로 광선을 보낸다.
-			Vec3 direction = hitRecord.Normal + RandomUnitVector();
+			Ray scattered;
+			Color attenuation;
 
-			return 0.5 * RayColor(Ray(hitRecord.P, direction), depth - 1, world);
+			if (hitRecord.material->Scatter(ray, hitRecord, attenuation, scattered))
+			{
+				return attenuation * RayColor(scattered, depth - 1, world);
+			}
+
+			return Color(0.0,0.0,0.0);
 		}
 
 		Vector3 unitDirection = UnitVector(ray.Direction());

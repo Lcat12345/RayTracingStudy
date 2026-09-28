@@ -2,12 +2,14 @@
 #define SPHERE_H
 
 #include "Hittable.h"
+#include <memory>
 
 class Sphere : public Hittable
 {
 public:
-	Sphere(const Point3& center, double radius)
+	Sphere(const Point3& center, double radius, const std::shared_ptr<Material>& material)
 		: mCenter(center), mRadius(std::fmax(0.0, radius))
+		, mMaterial(material)
 	{
 	}
 
@@ -45,17 +47,21 @@ public:
 
 		hitRecord.T = root;
 		hitRecord.P = ray.At(hitRecord.T);
+
 		// 구의 법선은 반지름으로 나누기만 하면 단위 길이로 만들 수 있어 제곱근을 
 		// 완전히 피할 수 있습니다.
 		Vec3 outwardNormal = (hitRecord.P - mCenter) / mRadius;
 		hitRecord.SetFaceNormal(ray, outwardNormal);
+
+		hitRecord.material = mMaterial;
 
 		return true;
 	}
 
 private:
 	Point3 mCenter;
-	double mRadius;
+	double mRadius = 0.0;
+	std::shared_ptr<Material> mMaterial;
 };
 
 #endif

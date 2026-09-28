@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Hittable.h"
 #include "HittableList.h"
+#include "Material.h"
 #include "Sphere.h"
 
 #include "Ray.h"
@@ -26,8 +27,16 @@ __global__ void addKernel(int *c, const int *a, const int *b)
 int main()
 {
 	HittableList world;
-	world.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.0), 0.5));
-	world.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0));
+
+	auto materialGround = std::make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
+	auto materialCenter = std::make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
+	auto materialLeft = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.3);
+	auto materialRight = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
+
+	world.Add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, materialGround));
+	world.Add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.2), 0.5, materialCenter));
+	world.Add(std::make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, materialLeft));
+	world.Add(std::make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, materialRight));
 
 	// Camera
 	Camera camera;
