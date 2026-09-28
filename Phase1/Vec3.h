@@ -1,6 +1,7 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+#include "RtWeekend.h"
 #include <cmath>
 #include <iostream>
 
@@ -131,6 +132,18 @@ inline Vector3 Cross(const Vector3& u, const Vector3& v)
 inline Vector3 UnitVector(const Vector3& v)
 {
 	return v / v.Length();
+}
+
+inline Vector3 RandomInUnitDisk()
+{
+	while (true)
+	{
+		auto p = Vector3(RandomDouble(-1, 1), RandomDouble(-1, 1), 0);
+		if (p.LengthSquared() < 1)
+		{
+			return p;
+		}
+	}
 }
 
 inline Vector3 RandomUnitVector()
